@@ -1,4 +1,5 @@
 ﻿using LibraryManager.Models;
+using LibraryManager.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,10 +13,14 @@ namespace LibraryManager.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ILibraryItemService libraryItemService;
+        private readonly ICategoryService categoryService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ILibraryItemService libraryItemService, ICategoryService categoryService)
         {
             _logger = logger;
+            this.libraryItemService = libraryItemService;
+            this.categoryService = categoryService;
         }
 
         public IActionResult Index()
@@ -23,8 +28,14 @@ namespace LibraryManager.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public async Task<IActionResult> Privacy()
         {
+            var test = await categoryService.GetCategories();
+
+            if (await categoryService.DeleteCategory(test[2]) == false)
+            {
+                // Fan den sket ju sig den
+            }
             return View();
         }
 

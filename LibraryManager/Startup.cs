@@ -1,6 +1,11 @@
+using LibraryManager.DataAccess;
+using LibraryManager.Models;
+using LibraryManager.Repositories;
+using LibraryManager.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,6 +28,19 @@ namespace LibraryManager
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<LibraryDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("LibraryManagerDb")
+                )
+            );
+
+            services.AddTransient<ILibraryDbRepository<LibraryItem>, LibraryDbRepository<LibraryItem>>();
+            services.AddTransient<ILibraryDbRepository<Category>, LibraryDbRepository<Category>>();
+
+            //services.AddTransient(typeof(ILibraryDbRepository<>), typeof(ILibraryDbRepository<>));
+            services.AddTransient<ILibraryItemService, LibraryItemService>();
+            services.AddTransient<ICategoryService, CategoryService>();
+
             services.AddControllersWithViews();
         }
 
