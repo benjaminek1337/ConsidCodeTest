@@ -31,7 +31,7 @@ namespace LibraryManager.Services
         public async Task<bool> DeleteCategoryAsync(Category entry)
         {
             // Kanske går att kolla på entry.LibraryItems ist för att köra en select. Men ja.
-            var entries = await libraryItems.SelectAsync(x => x.CategoryId == entry.Id);
+            var entries = await libraryItems.WhereAsync(x => x.CategoryId == entry.Id);
 
             if (entries.ToList().Count > 0)
             {
@@ -56,7 +56,7 @@ namespace LibraryManager.Services
 
         public async Task<bool> CategoryExists(int id)
         {
-            return await libraryItems.AnyAsync(x => x.Id == id);
+            return await categories.AnyAsync(x => x.Id == id);
         }
 
     }

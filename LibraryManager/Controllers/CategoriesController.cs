@@ -122,8 +122,12 @@ namespace LibraryManager.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var category = await categoryService.GetCategoryByIdAsync(id);
-            bool deleteSuccess = await categoryService.DeleteCategoryAsync(category);
-            return RedirectToAction(nameof(Index));
+            if(await categoryService.DeleteCategoryAsync(category))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            //Försök returnera fel
+            return View(Delete(id));
         }
     }
 }

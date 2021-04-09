@@ -12,17 +12,17 @@ namespace LibraryManager.Models
         [Key]
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "A category is required")]
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
 
         public Category Category { get; set; }
 
-        [Required(ErrorMessage = "A category id is required")]
+        [Required(ErrorMessage = "A title is required")]
         [Column(TypeName = "nvarchar(255)")]
         public string Title { get; set; }
 
-        [Required(ErrorMessage = "A title is required")]
+        [Required(ErrorMessage = "An author is required")]
         [Column(TypeName = "nvarchar(255)")]
         public string Author { get; set; }
 

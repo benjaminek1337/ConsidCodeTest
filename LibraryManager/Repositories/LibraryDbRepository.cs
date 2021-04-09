@@ -1,5 +1,6 @@
 ﻿using LibraryManager.DataAccess;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,14 +25,37 @@ namespace LibraryManager.Repositories
             return await entities.ToListAsync();
         }
 
+        public async Task<IEnumerable<T>> GetAllAsync(params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = entities;
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await query.ToListAsync();
+        }
+
         public async Task<T> GetByIdAsync(int id)
         {
             return await entities.FindAsync(id);
         }
 
-        public async Task<IEnumerable<T>> SelectAsync(Expression<Func<T, bool>> query)
+        public async Task<IEnumerable<T>> WhereAsync(Expression<Func<T, bool>> predicate)
         {
-            return await entities.Where(query).ToListAsync();
+            return await entities.Where(predicate).ToListAsync();
+        }
+
+        public async Task<IEnumerable<T>> WhereAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = entities.Where(predicate);
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<bool> AnyAsync(Expression<Func<T, bool>> query)

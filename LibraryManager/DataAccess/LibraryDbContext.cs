@@ -26,10 +26,14 @@ namespace LibraryManager.DataAccess
             modelBuilder.Entity<Category>().HasData(categories);
 
             // Seeda mera sedan
-            //var libItems = new List<LibraryItem>
-            //{
-            //    new LibraryItem {},
-            //};
+            var libItems = new List<LibraryItem>
+            {
+                new LibraryItem { Id = 1, CategoryId = 1, Author = "Tolkien", Title = "Sagan om ringen", Type = "Bok", IsBorrowable = true, Pages = 400},
+                new LibraryItem { Id = 2, CategoryId = 1, Author = "Tolkien", Title = "Sagan om ringen", Type = "Bok", IsBorrowable = true, Pages = 400},
+                new LibraryItem { Id = 3, CategoryId = 1, Author = "Tolkien", Title = "Sagan om ringen", Type = "Bok", IsBorrowable = true, Pages = 400}
+            };
+
+            modelBuilder.Entity<LibraryItem>().HasData(libItems);
         }
     }
 }

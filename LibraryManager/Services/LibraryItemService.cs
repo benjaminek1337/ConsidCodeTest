@@ -15,8 +15,9 @@ namespace LibraryManager.Services
             this.libraryItems = libraryItems;
         }
 
-        public async Task DeleteItemAsync(LibraryItem item)
+        public async Task DeleteItemAsync(int id)
         {
+            var item = await GetItemByIdAsync(id);
             await libraryItems.DeleteAsync(item);
         }
 
@@ -32,14 +33,24 @@ namespace LibraryManager.Services
 
         public async Task<List<LibraryItem>> GetAvailableItemsAsync()
         {
-            var allLibraryItems = await libraryItems.SelectAsync(x => String.IsNullOrEmpty(x.Borrower));
+            var allLibraryItems = await libraryItems.WhereAsync(x => String.IsNullOrEmpty(x.Borrower), x => x.Category);
             return allLibraryItems.ToList();
+        }
+
+        public async Task<LibraryItem> GetItemByIdAsync(int id)
+        {
+            return await libraryItems.GetByIdAsync(id);
         }
 
         public async Task<List<LibraryItem>> SearchItemsAsync(string query)
         {
-            var allLibraryItems = await libraryItems.SelectAsync(x => x.Title == query || x.Author == query);
+            var allLibraryItems = await libraryItems.WhereAsync(x => x.Title == query || x.Author == query);
             return allLibraryItems.ToList();
+        }
+
+        public async Task<bool> ItemExistsAsync(int id)
+        {
+            return await libraryItems.AnyAsync(x => x.Id == id);
         }
 
     }
