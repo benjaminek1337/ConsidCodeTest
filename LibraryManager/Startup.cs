@@ -38,6 +38,7 @@ namespace LibraryManager
             services.AddTransient<ILibraryDbRepository<Category>, LibraryDbRepository<Category>>();
 
             //services.AddTransient(typeof(ILibraryDbRepository<>), typeof(ILibraryDbRepository<>));
+
             services.AddTransient<ILibraryItemService, LibraryItemService>();
             services.AddTransient<ICategoryService, CategoryService>();
 

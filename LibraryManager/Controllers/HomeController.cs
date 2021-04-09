@@ -30,9 +30,9 @@ namespace LibraryManager.Controllers
 
         public async Task<IActionResult> Privacy()
         {
-            var test = await categoryService.GetCategories();
+            var test = await categoryService.GetCategoriesAsync();
 
-            if (await categoryService.DeleteCategory(test[2]) == false)
+            if (await categoryService.DeleteCategoryAsync(test[2]) == false)
             {
                 // Fan den sket ju sig den
             }

@@ -18,20 +18,20 @@ namespace LibraryManager.Services
             this.libraryItems = libraryItems;
         }
 
-        public async Task AddCategory(Category category)
+        public async Task AddCategoryAsync(Category category)
         {
-            await categories.Add(category);
+            await categories.AddAsync(category);
         }
 
-        public async Task UpdateCategory(Category category)
+        public async Task UpdateCategoryAsync(Category category)
         {
-            await categories.Update(category);
+            await categories.UpdateAsync(category);
         }
 
-        public async Task<bool> DeleteCategory(Category entry)
+        public async Task<bool> DeleteCategoryAsync(Category entry)
         {
             // Kanske går att kolla på entry.LibraryItems ist för att köra en select. Men ja.
-            var entries = await libraryItems.Select(x => x.CategoryId == entry.Id);
+            var entries = await libraryItems.SelectAsync(x => x.CategoryId == entry.Id);
 
             if (entries.ToList().Count > 0)
             {
@@ -39,14 +39,25 @@ namespace LibraryManager.Services
                 return false;
             }
             // Men nu kan vi rocka loss
-            //categories.Delete(entry);
+            await categories.DeleteAsync(entry);
             return true;
         }
 
-        public async Task<List<Category>> GetCategories()
+        public async Task<Category> GetCategoryByIdAsync(int id)
         {
-            var allCategories = await categories.GetAll();
+            return await categories.GetByIdAsync(id);
+        }
+
+        public async Task<List<Category>> GetCategoriesAsync()
+        {
+            var allCategories = await categories.GetAllAsync();
             return allCategories.ToList();
         }
+
+        public async Task<bool> CategoryExists(int id)
+        {
+            return await libraryItems.AnyAsync(x => x.Id == id);
+        }
+
     }
 }

@@ -19,48 +19,41 @@ namespace LibraryManager.Repositories
             entities = context.Set<T>();
         }
 
-        public async Task<IEnumerable<T>> GetAll()
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
             return await entities.ToListAsync();
         }
 
-        public async Task<T> GetById(int id)
+        public async Task<T> GetByIdAsync(int id)
         {
             return await entities.FindAsync(id);
         }
 
-        public async Task<IEnumerable<T>> Select(Expression<Func<T, bool>> query)
+        public async Task<IEnumerable<T>> SelectAsync(Expression<Func<T, bool>> query)
         {
             return await entities.Where(query).ToListAsync();
         }
 
-        public async Task Add(T entity)
+        public async Task<bool> AnyAsync(Expression<Func<T, bool>> query)
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException("Entity missing");
-            }
+            return await entities.AnyAsync(query);
+        }
+
+        public async Task AddAsync(T entity)
+        {
             await entities.AddAsync(entity);
             await context.SaveChangesAsync();
         }
 
-        public async Task Update(T entity)
+        public async Task UpdateAsync(T entity)
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException("Entity missing");
-            }
             entities.Update(entity);
             //context.Entry(entity).State = EntityState.Modified;
             await context.SaveChangesAsync();
         }
 
-        public async Task Delete(T entity)
+        public async Task DeleteAsync(T entity)
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException("Entity missing");
-            }
             entities.Remove(entity);
             await context.SaveChangesAsync();
         }

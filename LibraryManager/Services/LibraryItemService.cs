@@ -15,30 +15,30 @@ namespace LibraryManager.Services
             this.libraryItems = libraryItems;
         }
 
-        public async Task DeleteLibraryItem(LibraryItem item)
+        public async Task DeleteItemAsync(LibraryItem item)
         {
-            await libraryItems.Delete(item);
+            await libraryItems.DeleteAsync(item);
         }
 
-        public async Task AddItem(LibraryItem item)
+        public async Task AddItemAsync(LibraryItem item)
         {
-            await libraryItems.Add(item);
+            await libraryItems.AddAsync(item);
         }
 
-        public async Task UpdateItem(LibraryItem item)
+        public async Task UpdateItemAsync(LibraryItem item)
         {
-            await libraryItems.Update(item);
+            await libraryItems.UpdateAsync(item);
         }
 
-        public async Task<List<LibraryItem>> GetAvailableLibraryItems()
+        public async Task<List<LibraryItem>> GetAvailableItemsAsync()
         {
-            var allLibraryItems = await libraryItems.Select(x => String.IsNullOrEmpty(x.Borrower));
+            var allLibraryItems = await libraryItems.SelectAsync(x => String.IsNullOrEmpty(x.Borrower));
             return allLibraryItems.ToList();
         }
 
-        public async Task<List<LibraryItem>> SearchItems(string query)
+        public async Task<List<LibraryItem>> SearchItemsAsync(string query)
         {
-            var allLibraryItems = await libraryItems.Select(x => x.Title == query || x.Author == query);
+            var allLibraryItems = await libraryItems.SelectAsync(x => x.Title == query || x.Author == query);
             return allLibraryItems.ToList();
         }
 

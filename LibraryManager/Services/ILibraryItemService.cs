@@ -6,8 +6,10 @@ namespace LibraryManager.Services
 {
     public interface ILibraryItemService
     {
-        Task DeleteLibraryItem(LibraryItem item);
-        Task<List<LibraryItem>> GetAvailableLibraryItems();
-        Task UpdateItem(LibraryItem item);
+        Task AddItemAsync(LibraryItem item);
+        Task DeleteItemAsync(LibraryItem item);
+        Task<List<LibraryItem>> GetAvailableItemsAsync();
+        Task<List<LibraryItem>> SearchItemsAsync(string query);
+        Task UpdateItemAsync(LibraryItem item);
     }
 }
