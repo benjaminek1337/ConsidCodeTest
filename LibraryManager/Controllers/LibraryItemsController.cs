@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using LibraryManager.DataAccess;
 using LibraryManager.Models;
 using LibraryManager.Services;
+using LibraryManager.Models.ViewModels;
 
 namespace LibraryManager.Controllers
 {
@@ -41,10 +42,12 @@ namespace LibraryManager.Controllers
         }
 
         // GET: LibraryItems/Create
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(string type)
         {
-            ViewData["CategoryId"] = new SelectList(await categoryService.GetCategoriesAsync(), "Id", "CategoryName");
-            return View();
+            var model = new CreateEditLibraryItemViewModel();
+            model.Type = String.IsNullOrWhiteSpace(type) ? model.Types[0] : type;
+            model.Categories = await categoryService.GetCategoriesAsync();
+            return View(model);
         }
 
         // POST: LibraryItems/Create
@@ -52,27 +55,35 @@ namespace LibraryManager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CategoryId,Title,Author,Pages,RunTimeMinutes,IsBorrowable,Borrower,BorrowDate,Type")] LibraryItem libraryItem)
+        public async Task<IActionResult> Create(CreateEditLibraryItemViewModel model)
         {
+
             if (ModelState.IsValid)
             {
-                await libraryItemService.AddItemAsync(libraryItem);
+                await libraryItemService.AddItemAsync(model);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(await categoryService.GetCategoriesAsync(), "Id", "CategoryName", libraryItem.CategoryId);
-            return View(libraryItem);
+
+            model.Type = String.IsNullOrWhiteSpace(model.Type) ? model.Types[0] : model.Type;
+            model.Categories = await categoryService.GetCategoriesAsync();
+            return View(model);
         }
 
         // GET: LibraryItems/Edit/5
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(int id, string type)
         {
-            var libraryItem = await libraryItemService.GetItemByIdAsync(id);
-            if (libraryItem == null)
+            var item = await libraryItemService.GetItemByIdAsync(id);
+            var model = new CreateEditLibraryItemViewModel
             {
-                return NotFound();
-            }
-            ViewData["CategoryId"] = new SelectList(await categoryService.GetCategoriesAsync(), "Id", "CategoryName", libraryItem.CategoryId);
-            return View(libraryItem);
+                Type = String.IsNullOrWhiteSpace(type) ? item.Type : type,
+                Categories = await categoryService.GetCategoriesAsync(),
+                Title = item.Title,
+                Author = item.Author,
+                Pages = item.Pages,
+                RunTimeMinutes = item.RunTimeMinutes,
+                CategoryId = item.CategoryId
+            };
+            return View(model);
         }
 
         // POST: LibraryItems/Edit/5
@@ -80,34 +91,25 @@ namespace LibraryManager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CategoryId,Title,Author,Pages,RunTimeMinutes,IsBorrowable,Borrower,BorrowDate,Type")] LibraryItem libraryItem)
+        public async Task<IActionResult> Edit(int id, CreateEditLibraryItemViewModel model)
         {
-            if (id != libraryItem.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await libraryItemService.UpdateItemAsync(libraryItem);
+                    await libraryItemService.UpdateItemAsync(model);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!await libraryItemService.ItemExistsAsync(libraryItem.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(await categoryService.GetCategoriesAsync(), "Id", "CategoryName", libraryItem.CategoryId);
-            return View(libraryItem);
+            //ViewData["Types"] = new SelectList(types);
+            //ViewData["Type"] = libraryItem.Type;
+            //ViewData["CategoryId"] = new SelectList(await categoryService.GetCategoriesAsync(), "Id", "CategoryName", libraryItem.CategoryId);
+            return View(model);
         }
 
         // GET: LibraryItems/Delete/5
@@ -128,6 +130,55 @@ namespace LibraryManager.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await libraryItemService.DeleteItemAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Get: LibraryItems/Borrow/3
+        public IActionResult Borrow(int id)
+        {
+            //var libraryItem = await libraryItemService.GetItemByIdAsync(id);
+            var model = new BorrowItemViewModel
+            {
+                Id = id
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Borrow(int id, BorrowItemViewModel model)
+        {
+            //if (id != libraryItem.Id)
+            //{
+            //    return NotFound();
+            //}
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await libraryItemService.BorrowItemAsync(model);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!await libraryItemService.ItemExistsAsync(model.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(model);
+        }
+
+        public async Task<IActionResult> Return(int id)
+        {
+            await libraryItemService.ReturnItemAsync(id);
             return RedirectToAction(nameof(Index));
         }
     }

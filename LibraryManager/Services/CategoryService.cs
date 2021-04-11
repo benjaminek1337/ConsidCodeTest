@@ -18,9 +18,14 @@ namespace LibraryManager.Services
             this.libraryItems = libraryItems;
         }
 
-        public async Task AddCategoryAsync(Category category)
+        public async Task<bool> AddCategoryAsync(Category category)
         {
+            if(await categories.AnyAsync(x => x.CategoryName.ToLower() == category.CategoryName.ToLower()))
+            {
+                return false;
+            }
             await categories.AddAsync(category);
+            return true;
         }
 
         public async Task UpdateCategoryAsync(Category category)
@@ -30,15 +35,11 @@ namespace LibraryManager.Services
 
         public async Task<bool> DeleteCategoryAsync(Category entry)
         {
-            // Kanske går att kolla på entry.LibraryItems ist för att köra en select. Men ja.
-            var entries = await libraryItems.WhereAsync(x => x.CategoryId == entry.Id);
-
-            if (entries.ToList().Count > 0)
+            if (await libraryItems.AnyAsync(x => x.CategoryId == entry.Id))
             {
-                // Då kan vi ju inte radera
                 return false;
             }
-            // Men nu kan vi rocka loss
+
             await categories.DeleteAsync(entry);
             return true;
         }

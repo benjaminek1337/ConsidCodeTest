@@ -14,32 +14,32 @@ namespace LibraryManager.Models
 
         [Required(ErrorMessage = "A category is required")]
         [ForeignKey("Category")]
+        [Display(Name = "Category")]
+
         public int CategoryId { get; set; }
 
         public Category Category { get; set; }
 
-        [Required(ErrorMessage = "A title is required")]
-        [Column(TypeName = "nvarchar(255)")]
+        [Required(ErrorMessage = "A title is required")]  
         public string Title { get; set; }
 
-        [Required(ErrorMessage = "An author is required")]
-        [Column(TypeName = "nvarchar(255)")]
         public string Author { get; set; }
 
         public int? Pages { get; set; }
 
+        [Display(Name = "Run time (minutes)")]
         public int? RunTimeMinutes { get; set; }
 
         [Required(ErrorMessage = "The borrowability needs to be set")]
+        //[Column(TypeName = "bit")]
         public bool IsBorrowable { get; set; }
 
-        [Column(TypeName = "nvarchar(255)")]
         public string Borrower { get; set; }
 
+        [Display(Name = "Date when borrowed")]
         public DateTime? BorrowDate { get; set; }
 
         [Required(ErrorMessage = "A type of item is required")]
-        [Column(TypeName = "nvarchar(255)")]
         public string Type { get; set; }
 
     }

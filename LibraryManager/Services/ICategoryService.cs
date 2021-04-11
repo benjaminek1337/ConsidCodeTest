@@ -6,7 +6,7 @@ namespace LibraryManager.Services
 {
     public interface ICategoryService
     {
-        Task AddCategoryAsync(Category category);
+        Task<bool> AddCategoryAsync(Category category);
         Task<bool> CategoryExists(int id);
         Task<bool> DeleteCategoryAsync(Category entry);
         Task<List<Category>> GetCategoriesAsync();

@@ -12,8 +12,8 @@ namespace LibraryManager.Models
         [Key]
         public int Id { get; set; }
         
-        [Column(TypeName = "nvarchar(255)")]
         [Required(ErrorMessage = "Category name is required.")]
+        [Display(Name = "Category")]
         public string CategoryName { get; set; }
 
         public List<LibraryItem> LibraryItems { get; set; }

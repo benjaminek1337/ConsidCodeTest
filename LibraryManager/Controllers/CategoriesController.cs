@@ -53,8 +53,12 @@ namespace LibraryManager.Controllers
         {
             if (ModelState.IsValid)
             {
-                await categoryService.AddCategoryAsync(category);
-                return RedirectToAction(nameof(Index));
+                bool isCreated = await categoryService.AddCategoryAsync(category);
+                if (isCreated)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                ModelState.AddModelError("Create", $"The category '{category.CategoryName}' already exists");
             }
             return View(category);
         }
@@ -122,12 +126,13 @@ namespace LibraryManager.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var category = await categoryService.GetCategoryByIdAsync(id);
-            if(await categoryService.DeleteCategoryAsync(category))
+            bool isDeleted = await categoryService.DeleteCategoryAsync(category);
+            if (isDeleted)
             {
                 return RedirectToAction(nameof(Index));
             }
-            //Försök returnera fel
-            return View(Delete(id));
+            //ModelState.AddModelError("Delete", "The category cannot be deleted because it contains some library items");
+            return RedirectToAction("Delete", id);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using LibraryManager.Models;
+using LibraryManager.Models.ViewModels;
 using LibraryManager.Repositories;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,11 @@ namespace LibraryManager.Services
     public class LibraryItemService : ILibraryItemService
     {
         ILibraryDbRepository<LibraryItem> libraryItems;
-        public LibraryItemService(ILibraryDbRepository<LibraryItem> libraryItems)
+        ILibraryDbRepository<Category> categories;
+        public LibraryItemService(ILibraryDbRepository<LibraryItem> libraryItems, ILibraryDbRepository<Category> categories)
         {
             this.libraryItems = libraryItems;
+            this.categories = categories;
         }
 
         public async Task DeleteItemAsync(int id)
@@ -21,19 +24,61 @@ namespace LibraryManager.Services
             await libraryItems.DeleteAsync(item);
         }
 
-        public async Task AddItemAsync(LibraryItem item)
+        public async Task AddItemAsync(CreateEditLibraryItemViewModel model)
         {
+            var item = new LibraryItem
+            {
+                Title = model.Title,
+                Author = model.Author,
+                Pages = model.Pages,
+                RunTimeMinutes = model.RunTimeMinutes,
+                Type = model.Type,
+                IsBorrowable = model.Type == "Reference Book" ? false : true,
+                Category = await categories.GetByIdAsync(model.CategoryId),
+                CategoryId = model.CategoryId
+            };
+
             await libraryItems.AddAsync(item);
         }
 
-        public async Task UpdateItemAsync(LibraryItem item)
+        public async Task UpdateItemAsync(CreateEditLibraryItemViewModel model)
         {
+            var item = new LibraryItem
+            {
+                Title = model.Title,
+                Author = model.Author,
+                Pages = model.Pages,
+                RunTimeMinutes = model.RunTimeMinutes,
+                Type = model.Type,
+                IsBorrowable = model.Type == "Reference Book" ? false : true,
+                Category = await categories.GetByIdAsync(model.CategoryId),
+                CategoryId = model.CategoryId
+            };
+
+            await libraryItems.UpdateAsync(item);
+        }
+
+        public async Task BorrowItemAsync(BorrowItemViewModel model)
+        {
+            var item = await libraryItems.GetByIdAsync(model.Id);
+            item.Borrower = model.Borrower;
+            item.BorrowDate = DateTime.Now;
+
+            await libraryItems.UpdateAsync(item);
+        }
+
+        public async Task ReturnItemAsync(int id)
+        {
+            var item = await libraryItems.GetByIdAsync(id);
+            item.Borrower = null;
+            item.BorrowDate = null;
+
             await libraryItems.UpdateAsync(item);
         }
 
         public async Task<List<LibraryItem>> GetAvailableItemsAsync()
         {
-            var allLibraryItems = await libraryItems.WhereAsync(x => String.IsNullOrEmpty(x.Borrower), x => x.Category);
+            var allLibraryItems = await libraryItems.GetAllAsync(x => x.Category);
             return allLibraryItems.ToList();
         }
 
