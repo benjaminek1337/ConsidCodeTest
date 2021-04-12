@@ -28,14 +28,8 @@ namespace LibraryManager.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Privacy()
+        public IActionResult Privacy()
         {
-            var test = await categoryService.GetCategoriesAsync();
-
-            if (await categoryService.DeleteCategoryAsync(test[2]) == false)
-            {
-                // Fan den sket ju sig den
-            }
             return View();
         }
 

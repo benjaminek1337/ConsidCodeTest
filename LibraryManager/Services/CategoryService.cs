@@ -28,9 +28,14 @@ namespace LibraryManager.Services
             return true;
         }
 
-        public async Task UpdateCategoryAsync(Category category)
+        public async Task<bool> UpdateCategoryAsync(Category category)
         {
+            if(await categories.AnyAsync(x => x.CategoryName.ToLower() == category.CategoryName.ToLower()))
+            {
+                return false;
+            }
             await categories.UpdateAsync(category);
+            return true;
         }
 
         public async Task<bool> DeleteCategoryAsync(Category entry)

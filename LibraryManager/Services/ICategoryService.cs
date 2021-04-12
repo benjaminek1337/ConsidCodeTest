@@ -11,6 +11,6 @@ namespace LibraryManager.Services
         Task<bool> DeleteCategoryAsync(Category entry);
         Task<List<Category>> GetCategoriesAsync();
         Task<Category> GetCategoryByIdAsync(int id);
-        Task UpdateCategoryAsync(Category category);
+        Task<bool> UpdateCategoryAsync(Category category);
     }
 }

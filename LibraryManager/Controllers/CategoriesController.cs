@@ -41,7 +41,7 @@ namespace LibraryManager.Controllers
         }
 
         // GET: Categories/Create
-        public IActionResult Create()
+        public IActionResult Create(bool creationFailed)
         {
             return View();
         }
@@ -51,17 +51,17 @@ namespace LibraryManager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CategoryName")] Category category)
+        public async Task<IActionResult> Create(Category category)
         {
             if (ModelState.IsValid)
             {
-                bool isCreated = await categoryService.AddCategoryAsync(category);
-                if (isCreated)
+                if (await categoryService.AddCategoryAsync(category))
                 {
                     return RedirectToAction(nameof(Index));
                 }
-                ModelState.AddModelError("Create", $"The category '{category.CategoryName}' already exists");
             }
+
+            ViewData["CreationError"] = $"The category {category.CategoryName} already exists";
             return View(category);
         }
 
@@ -81,7 +81,7 @@ namespace LibraryManager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CategoryName")] Category category)
+        public async Task<IActionResult> Edit(int id, Category category)
         {
             if (id != category.Id)
             {
@@ -92,7 +92,10 @@ namespace LibraryManager.Controllers
             {
                 try
                 {
-                    await categoryService.UpdateCategoryAsync(category);
+                    if(await categoryService.UpdateCategoryAsync(category))
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -104,23 +107,24 @@ namespace LibraryManager.Controllers
                     {
                         throw;
                     }
-                }
-                return RedirectToAction(nameof(Index));
+                }      
             }
+
+            ViewData["CreationError"] = $"The category {category.CategoryName} already exists";
             return View(category);
         }
 
         // GET: Categories/Delete/5
-        public async Task<IActionResult> Delete(int id, bool isDeleted)
+        public async Task<IActionResult> Delete(int id, bool deleteFailed)
         {
             var category = await categoryService.GetCategoryByIdAsync(id);
             if (category == null)
             {
                 return NotFound();
             }
-            if (!isDeleted)
+            if (deleteFailed)
             {
-                ModelState.AddModelError("Delete", "The category cannot be deleted because it contains some library items");
+                ViewData["DeleteError"] = "The category cannot be deleted because it contains some library items";
             }
 
             return View(category);
@@ -132,13 +136,11 @@ namespace LibraryManager.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var category = await categoryService.GetCategoryByIdAsync(id);
-            bool isDeleted = await categoryService.DeleteCategoryAsync(category);
-            if (isDeleted)
+            if (await categoryService.DeleteCategoryAsync(category))
             {
                 return RedirectToAction(nameof(Index));
             }
-            //
-            return RedirectToAction("Delete", (id, isDeleted));
+            return RedirectToAction("Delete", new { id, deleteFailed = true });
         }
     }
 }

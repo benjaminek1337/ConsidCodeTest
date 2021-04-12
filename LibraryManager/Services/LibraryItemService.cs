@@ -26,36 +26,13 @@ namespace LibraryManager.Services
 
         public async Task AddItemAsync(CreateEditLibraryItemViewModel model)
         {
-            var item = new LibraryItem
-            {
-                Title = model.Title,
-                Author = model.Author,
-                Pages = model.Pages,
-                RunTimeMinutes = model.RunTimeMinutes,
-                Type = model.Type,
-                IsBorrowable = model.Type == "Reference Book" ? false : true,
-                Category = await categories.GetByIdAsync(model.CategoryId),
-                CategoryId = model.CategoryId
-            };
-
+            var item = await CreateLibraryItem(model);
             await libraryItems.AddAsync(item);
         }
 
         public async Task UpdateItemAsync(CreateEditLibraryItemViewModel model)
         {
-            var item = new LibraryItem
-            {
-                Id = model.Id,
-                Title = model.Title,
-                Author = model.Author,
-                Pages = model.Pages,
-                RunTimeMinutes = model.RunTimeMinutes,
-                Type = model.Type,
-                IsBorrowable = model.Type == "Reference Book" ? false : true,
-                Category = await categories.GetByIdAsync(model.CategoryId),
-                CategoryId = model.CategoryId
-            };
-
+            var item = await CreateLibraryItem(model);
             await libraryItems.UpdateAsync(item);
         }
 
@@ -97,6 +74,24 @@ namespace LibraryManager.Services
         public async Task<bool> ItemExistsAsync(int id)
         {
             return await libraryItems.AnyAsync(x => x.Id == id);
+        }
+
+        private async Task<LibraryItem> CreateLibraryItem(CreateEditLibraryItemViewModel model)
+        {
+            var item = new LibraryItem
+            {
+                Id = model.Id,
+                Title = model.Title,
+                Author = model.Author,
+                Pages = model.Pages,
+                RunTimeMinutes = model.RunTimeMinutes,
+                Type = model.Type,
+                IsBorrowable = model.Type == "Reference Book" ? false : true,
+                Category = await categories.GetByIdAsync(model.CategoryId),
+                CategoryId = model.CategoryId
+            };
+
+            return item;
         }
 
     }

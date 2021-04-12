@@ -177,11 +177,6 @@ namespace LibraryManager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Borrow(int id, BorrowItemViewModel model)
         {
-            //if (id != libraryItem.Id)
-            //{
-            //    return NotFound();
-            //}
-
             if (ModelState.IsValid)
             {
                 try
