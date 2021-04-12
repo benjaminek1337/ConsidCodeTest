@@ -33,6 +33,9 @@ namespace LibraryManager
                     Configuration.GetConnectionString("LibraryManagerDb")
                 )
             );
+            
+            services.AddDistributedMemoryCache();
+            services.AddSession();
 
             services.AddTransient<ILibraryDbRepository<LibraryItem>, LibraryDbRepository<LibraryItem>>();
             services.AddTransient<ILibraryDbRepository<Category>, LibraryDbRepository<Category>>();
@@ -41,6 +44,7 @@ namespace LibraryManager
 
             services.AddTransient<ILibraryItemService, LibraryItemService>();
             services.AddTransient<ICategoryService, CategoryService>();
+
 
             services.AddControllersWithViews();
         }
@@ -62,6 +66,7 @@ namespace LibraryManager
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseSession();
 
             app.UseAuthorization();
 

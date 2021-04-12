@@ -23,7 +23,9 @@ namespace LibraryManager.Controllers
         // GET: Categories
         public async Task<IActionResult> Index()
         {
-            return View(await categoryService.GetCategoriesAsync());
+            var items = await categoryService.GetCategoriesAsync();
+            items = items.OrderBy(x => x.CategoryName).ToList();
+            return View(items);
         }
 
         // GET: Categories/Details/5
@@ -94,7 +96,7 @@ namespace LibraryManager.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (await categoryService.CategoryExists(category.Id))
+                    if (!await categoryService.CategoryExists(category.Id))
                     {
                         return NotFound();
                     }
@@ -109,12 +111,16 @@ namespace LibraryManager.Controllers
         }
 
         // GET: Categories/Delete/5
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id, bool isDeleted)
         {
             var category = await categoryService.GetCategoryByIdAsync(id);
             if (category == null)
             {
                 return NotFound();
+            }
+            if (!isDeleted)
+            {
+                ModelState.AddModelError("Delete", "The category cannot be deleted because it contains some library items");
             }
 
             return View(category);
@@ -131,8 +137,8 @@ namespace LibraryManager.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
-            //ModelState.AddModelError("Delete", "The category cannot be deleted because it contains some library items");
-            return RedirectToAction("Delete", id);
+            //
+            return RedirectToAction("Delete", (id, isDeleted));
         }
     }
 }

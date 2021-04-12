@@ -13,7 +13,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Category)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["SortByCategory"]">@Html.DisplayNameFor(model => model.Category)</a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Title)
@@ -34,8 +34,8 @@
                 @Html.DisplayNameFor(model => model.BorrowDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Type)
-            </th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["SortByType"]">@Html.DisplayNameFor(model => model.Type)</a>
+</th>
             <th></th>
         </tr>
     </thead>

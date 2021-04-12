@@ -9,6 +9,7 @@ using LibraryManager.DataAccess;
 using LibraryManager.Models;
 using LibraryManager.Services;
 using LibraryManager.Models.ViewModels;
+using Microsoft.AspNetCore.Http;
 
 namespace LibraryManager.Controllers
 {
@@ -24,9 +25,36 @@ namespace LibraryManager.Controllers
         }
 
         // GET: LibraryItems
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
-            return View(await libraryItemService.GetAvailableItemsAsync());
+            sortOrder = !String.IsNullOrEmpty(sortOrder) ? sortOrder : HttpContext.Session.GetString("SortOrder");
+            
+            ViewData["SortByCategory"] = (String.IsNullOrEmpty(sortOrder) || sortOrder == "categoryAscending") ? "categoryDescending" : "categoryAscending";
+            ViewData["SortByType"] = sortOrder == "typeAscending" ? "typeDescending" : "typeAscending";
+
+            if (!String.IsNullOrEmpty(sortOrder))
+            {
+                HttpContext.Session.SetString("SortOrder", sortOrder);
+            }
+
+            var items = await libraryItemService.GetAvailableItemsAsync();
+            switch (sortOrder)
+            {
+                case "categoryDescending":
+                    items = items.OrderByDescending(x => x.Category.CategoryName).ToList();
+                    break;
+                case "typeAscending":
+                    items = items.OrderBy(x => x.Type).ToList();
+                    break;
+                case "typeDescending":
+                    items = items.OrderByDescending(x => x.Type).ToList();
+                    break;
+                default:
+                    items = items.OrderBy(x => x.Category.CategoryName).ToList();
+                    break;
+            }
+
+            return View(items);
         }
 
         // GET: LibraryItems/Details/5

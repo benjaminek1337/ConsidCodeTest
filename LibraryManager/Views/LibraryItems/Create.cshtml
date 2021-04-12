@@ -12,7 +12,7 @@
         <form asp-action="Create" method="get">
             <div class="form-group">
                 <label asp-for="Type" class="control-label"></label>
-                <select asp-for="Type" class="form-control" asp-items="(new SelectList(Model.Types))" onchange="this.form.submit()"></select>
+                <select asp-for="Type" class="form-control" asp-items="(new SelectList(Model.Types))" onchange="this.form.submit()" required></select>
                 <span asp-validation-for="Type" class="text-danger"></span>
                 <br />
             </div>
@@ -24,7 +24,7 @@
 
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
+                <input asp-for="Title" class="form-control" required/>
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
 
@@ -37,7 +37,7 @@
             {
                 <div class="form-group">
                     <label asp-for="RunTimeMinutes" class="control-label"></label>
-                    <input asp-for="RunTimeMinutes" class="form-control" />
+                    <input asp-for="RunTimeMinutes" class="form-control"  required/>
                     <span asp-validation-for="RunTimeMinutes" class="text-danger"></span>
                 </div>
             }
@@ -46,7 +46,7 @@
             {
                 <div class="form-group">
                     <label asp-for="Author" class="control-label"></label>
-                    <input asp-for="Author" class="form-control" />
+                    <input asp-for="Author" class="form-control"  required/>
                     <span asp-validation-for="Author" class="text-danger"></span>
                 </div>
             }
@@ -55,7 +55,7 @@
             {
                 <div class="form-group">
                     <label asp-for="Pages" class="control-label"></label>
-                    <input asp-for="Pages" class="form-control" />
+                    <input asp-for="Pages" class="form-control"  required/>
                     <span asp-validation-for="Pages" class="text-danger"></span>
                 </div>
             }
