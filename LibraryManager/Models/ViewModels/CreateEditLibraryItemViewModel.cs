@@ -10,6 +10,7 @@ namespace LibraryManager.Models.ViewModels
 {
     public class CreateEditLibraryItemViewModel
     {
+        public int Id { get; set; }
         [Required(ErrorMessage = "A title is required")]
         public string Title { get; set; }
 

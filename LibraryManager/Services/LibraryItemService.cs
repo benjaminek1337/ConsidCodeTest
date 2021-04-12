@@ -45,6 +45,7 @@ namespace LibraryManager.Services
         {
             var item = new LibraryItem
             {
+                Id = model.Id,
                 Title = model.Title,
                 Author = model.Author,
                 Pages = model.Pages,

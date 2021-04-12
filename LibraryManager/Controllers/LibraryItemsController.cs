@@ -57,7 +57,6 @@ namespace LibraryManager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateEditLibraryItemViewModel model)
         {
-
             if (ModelState.IsValid)
             {
                 await libraryItemService.AddItemAsync(model);
@@ -75,6 +74,7 @@ namespace LibraryManager.Controllers
             var item = await libraryItemService.GetItemByIdAsync(id);
             var model = new CreateEditLibraryItemViewModel
             {
+                Id = item.Id,
                 Type = String.IsNullOrWhiteSpace(type) ? item.Type : type,
                 Categories = await categoryService.GetCategoriesAsync(),
                 Title = item.Title,
