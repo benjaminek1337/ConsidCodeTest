@@ -79,8 +79,6 @@ namespace LibraryManager.Controllers
         }
 
         // POST: LibraryItems/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateEditLibraryItemViewModel model)
@@ -115,8 +113,6 @@ namespace LibraryManager.Controllers
         }
 
         // POST: LibraryItems/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, CreateEditLibraryItemViewModel model)
@@ -134,9 +130,6 @@ namespace LibraryManager.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["Types"] = new SelectList(types);
-            //ViewData["Type"] = libraryItem.Type;
-            //ViewData["CategoryId"] = new SelectList(await categoryService.GetCategoriesAsync(), "Id", "CategoryName", libraryItem.CategoryId);
             return View(model);
         }
 
@@ -161,7 +154,7 @@ namespace LibraryManager.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // Get: LibraryItems/Borrow/3
+        // GET: LibraryItems/Borrow/3
         public IActionResult Borrow(int id)
         {
             //var libraryItem = await libraryItemService.GetItemByIdAsync(id);
@@ -173,6 +166,7 @@ namespace LibraryManager.Controllers
             return View(model);
         }
 
+        // POST: LibraryItems/Borrow/3
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Borrow(int id, BorrowItemViewModel model)
@@ -199,6 +193,7 @@ namespace LibraryManager.Controllers
             return View(model);
         }
 
+        // GET LibraryItems/Return/3
         public async Task<IActionResult> Return(int id)
         {
             await libraryItemService.ReturnItemAsync(id);
