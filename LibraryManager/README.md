@@ -1,7 +1,7 @@
 ﻿# Library Manager - Consid Code Test
 
 ## Instructions
-To run the solution, open the package manager console, and update the database.
+To run the solution, open the package manager console, and run update-database.
 A local SQL db should be generated and seeded.
 
 ## Scenario 1
