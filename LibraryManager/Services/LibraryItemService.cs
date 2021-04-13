@@ -34,7 +34,7 @@ namespace LibraryManager.Services
         /// <param name="model">The ViewModel containing the library item data</param>
         public async Task AddItemAsync(CreateEditLibraryItemViewModel model)
         {
-            var item = await CreateLibraryItem(model);
+            var item = CreateLibraryItem(model);
             await libraryItems.AddAsync(item);
         }
 
@@ -44,7 +44,7 @@ namespace LibraryManager.Services
         /// <param name="model">The ViewModel containing the library item data</param>
         public async Task UpdateItemAsync(CreateEditLibraryItemViewModel model)
         {
-            var item = await CreateLibraryItem(model);
+            var item = CreateLibraryItem(model);
             await libraryItems.UpdateAsync(item);
         }
 

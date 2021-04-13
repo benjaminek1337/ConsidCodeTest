@@ -6,7 +6,7 @@ namespace LibraryManager.Tests
     public class UnitTest1
     {
         [Fact]
-        public void DeleteItemAsync_ShouldDeleteItem()
+        public void Test1()
         {
 
         }
