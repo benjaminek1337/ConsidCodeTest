@@ -132,7 +132,6 @@ namespace LibraryManager.Services
                 RunTimeMinutes = model.RunTimeMinutes,
                 Type = model.Type,
                 IsBorrowable = model.Type == "Reference Book" ? false : true,
-                Category = await categories.GetByIdAsync(model.CategoryId),
                 CategoryId = model.CategoryId
             };
 
