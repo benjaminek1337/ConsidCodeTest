@@ -62,7 +62,7 @@ namespace LibraryManager.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var libraryItem = await libraryItemService.GetItemByIdAsync(id);
-            if(libraryItem == null && id == 0)
+            if (libraryItem == null && id == 0)
             {
                 return BadRequest();
             }

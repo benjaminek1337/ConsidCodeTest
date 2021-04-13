@@ -6,19 +6,19 @@
 <h1 class="text-danger">Error, status code @Model.ErrorCode</h1>
 @if (Model.ErrorCode == 400)
 {
-    <h2 class="text-danger">Bad request.</h2>
+    <h2>Bad request.</h2>
 }
 else if (Model.ErrorCode == 403)
 {
-    <h2 class="text-danger">The action is unauthorized.</h2>
+    <h2>The action is unauthorized.</h2>
 }
 else if (Model.ErrorCode == 404)
 {
-    <h2 class="text-danger">The specified resource cannot be found.</h2>
+    <h2>The specified resource cannot be found.</h2>
 }
 else if (Model.ErrorCode == 500)
 {
-    <h2 class="text-danger">An internal server error has occured.</h2>
+    <h2>An internal server error has occured.</h2>
 }
 else
 {
