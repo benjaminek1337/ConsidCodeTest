@@ -53,7 +53,6 @@ namespace LibraryManager.Repositories
         /// <returns>An object from the database</returns>
         public async Task<T> GetByIdAsync(int id)
         {
-            // SLÄNG IN NOT FOUND EXCEPTION
             return await entities.FindAsync(id);
         }
 

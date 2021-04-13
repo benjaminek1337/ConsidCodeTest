@@ -27,8 +27,10 @@ namespace LibraryManager.Controllers
         // GET: LibraryItems
         public async Task<IActionResult> Index(string sortOrder)
         {
+            var items = await libraryItemService.GetAvailableItemsAsync();
+
             sortOrder = !String.IsNullOrEmpty(sortOrder) ? sortOrder : HttpContext.Session.GetString("SortOrder");
-            
+
             ViewData["SortByCategory"] = (String.IsNullOrEmpty(sortOrder) || sortOrder == "categoryAscending") ? "categoryDescending" : "categoryAscending";
             ViewData["SortByType"] = sortOrder == "typeAscending" ? "typeDescending" : "typeAscending";
 
@@ -37,7 +39,6 @@ namespace LibraryManager.Controllers
                 HttpContext.Session.SetString("SortOrder", sortOrder);
             }
 
-            var items = await libraryItemService.GetAvailableItemsAsync();
             switch (sortOrder)
             {
                 case "categoryDescending":
@@ -125,8 +126,14 @@ namespace LibraryManager.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-
-                    throw;
+                    if (!await libraryItemService.ItemExistsAsync(model.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -137,11 +144,6 @@ namespace LibraryManager.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var libraryItem = await libraryItemService.GetItemByIdAsync(id);
-            if (libraryItem == null)
-            {
-                return NotFound();
-            }
-
             return View(libraryItem);
         }
 
@@ -157,7 +159,6 @@ namespace LibraryManager.Controllers
         // GET: LibraryItems/Borrow/3
         public IActionResult Borrow(int id)
         {
-            //var libraryItem = await libraryItemService.GetItemByIdAsync(id);
             var model = new BorrowItemViewModel
             {
                 Id = id

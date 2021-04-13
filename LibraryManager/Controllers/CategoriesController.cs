@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using LibraryManager.DataAccess;
 using LibraryManager.Models;
 using LibraryManager.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace LibraryManager.Controllers
 {
@@ -122,7 +123,6 @@ namespace LibraryManager.Controllers
             {
                 ViewData["DeleteError"] = "The category cannot be deleted because it contains some library items";
             }
-
             return View(category);
         }
 
