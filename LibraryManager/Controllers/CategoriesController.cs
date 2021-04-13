@@ -133,22 +133,24 @@ namespace LibraryManager.Controllers
                 return NotFound();
             }
 
+            if (deleteFailed)
+            {
+                ViewData["DeleteError"] = "The category cannot be deleted because it contains some library items";
+            }
             return View(category);
         }
 
         // POST: Categories/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var category = await categoryService.GetCategoryByIdAsync(id);
             if (await categoryService.DeleteCategoryAsync(category))
             {
                 return RedirectToAction(nameof(Index));
             }
-
-            ViewData["DeleteError"] = "The category cannot be deleted because it contains some library items";
-            return View(category);
+            return RedirectToAction("Delete", new { id, deleteFailed = true });
         }
     }
 }
