@@ -25,7 +25,9 @@ namespace LibraryManager.Services
         /// <returns>A bool indicating whether or not the object could be added</returns>
         public async Task<bool> AddCategoryAsync(Category category)
         {
-            if(await categories.AnyAsync(x => x.CategoryName.ToLower() == category.CategoryName.ToLower()))
+            bool itemExists = await categories.AnyAsync(x => x.CategoryName.ToLower() == category.CategoryName.ToLower());
+
+            if (itemExists)
             {
                 return false;
             }
@@ -40,7 +42,9 @@ namespace LibraryManager.Services
         /// <returns>A bool indicating whether or not the object could be updated</returns>
         public async Task<bool> UpdateCategoryAsync(Category category)
         {
-            if(await categories.AnyAsync(x => x.CategoryName.ToLower() == category.CategoryName.ToLower()))
+            bool itemExists = await categories.AnyAsync(x => x.CategoryName.ToLower() == category.CategoryName.ToLower());
+
+            if (itemExists)
             {
                 return false;
             }
@@ -55,7 +59,9 @@ namespace LibraryManager.Services
         /// <returns>A bool indicating whether or not the operation was successful</returns>
         public async Task<bool> DeleteCategoryAsync(Category category)
         {
-            if (await libraryItems.AnyAsync(x => x.CategoryId == category.Id))
+            bool itemExists = await libraryItems.AnyAsync(x => x.CategoryId == category.Id);
+
+            if (itemExists)
             {
                 return false;
             }
