@@ -33,7 +33,11 @@ namespace LibraryManager.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var category = await categoryService.GetCategoryByIdAsync(id);
-            if (category == null)
+            if(id == 0 && category == null)
+            {
+                return BadRequest();
+            }
+            else if (category == null)
             {
                 return NotFound();
             }
@@ -68,7 +72,11 @@ namespace LibraryManager.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var category = await categoryService.GetCategoryByIdAsync(id);
-            if (category == null)
+            if (id == 0 && category == null)
+            {
+                return BadRequest();
+            }
+            else if (category == null)
             {
                 return NotFound();
             }
@@ -115,28 +123,32 @@ namespace LibraryManager.Controllers
         public async Task<IActionResult> Delete(int id, bool deleteFailed)
         {
             var category = await categoryService.GetCategoryByIdAsync(id);
-            if (category == null)
+
+            if (id == 0 && category == null)
+            {
+                return BadRequest();
+            }
+            else if (category == null)
             {
                 return NotFound();
             }
-            if (deleteFailed)
-            {
-                ViewData["DeleteError"] = "The category cannot be deleted because it contains some library items";
-            }
+
             return View(category);
         }
 
         // POST: Categories/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var category = await categoryService.GetCategoryByIdAsync(id);
             if (await categoryService.DeleteCategoryAsync(category))
             {
                 return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction("Delete", new { id, deleteFailed = true });
+
+            ViewData["DeleteError"] = "The category cannot be deleted because it contains some library items";
+            return View(category);
         }
     }
 }

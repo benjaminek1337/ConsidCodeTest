@@ -62,7 +62,11 @@ namespace LibraryManager.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var libraryItem = await libraryItemService.GetItemByIdAsync(id);
-            if (libraryItem == null)
+            if(libraryItem == null && id == 0)
+            {
+                return BadRequest();
+            }
+            else if (libraryItem == null)
             {
                 return NotFound();
             }
@@ -98,17 +102,27 @@ namespace LibraryManager.Controllers
         // GET: LibraryItems/Edit/5
         public async Task<IActionResult> Edit(int id, string type)
         {
-            var item = await libraryItemService.GetItemByIdAsync(id);
+            var libraryItem = await libraryItemService.GetItemByIdAsync(id);
+
+            if (libraryItem == null && id == 0)
+            {
+                return BadRequest();
+            }
+            else if (libraryItem == null)
+            {
+                return NotFound();
+            }
+
             var model = new CreateEditLibraryItemViewModel
             {
-                Id = item.Id,
-                Type = String.IsNullOrWhiteSpace(type) ? item.Type : type,
+                Id = libraryItem.Id,
+                Type = String.IsNullOrWhiteSpace(type) ? libraryItem.Type : type,
                 Categories = await categoryService.GetCategoriesAsync(),
-                Title = item.Title,
-                Author = item.Author,
-                Pages = item.Pages,
-                RunTimeMinutes = item.RunTimeMinutes,
-                CategoryId = item.CategoryId
+                Title = libraryItem.Title,
+                Author = libraryItem.Author,
+                Pages = libraryItem.Pages,
+                RunTimeMinutes = libraryItem.RunTimeMinutes,
+                CategoryId = libraryItem.CategoryId
             };
             return View(model);
         }
@@ -144,6 +158,14 @@ namespace LibraryManager.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var libraryItem = await libraryItemService.GetItemByIdAsync(id);
+            if (libraryItem == null && id == 0)
+            {
+                return BadRequest();
+            }
+            else if (libraryItem == null)
+            {
+                return NotFound();
+            }
             return View(libraryItem);
         }
 
