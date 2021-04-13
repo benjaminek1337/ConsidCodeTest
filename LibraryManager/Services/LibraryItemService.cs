@@ -121,7 +121,7 @@ namespace LibraryManager.Services
         /// </summary>
         /// <param name="model">The ViewModel to map the data from</param>
         /// <returns>a LibraryItem object</returns>
-        private async Task<LibraryItem> CreateLibraryItem(CreateEditLibraryItemViewModel model)
+        private LibraryItem CreateLibraryItem(CreateEditLibraryItemViewModel model)
         {
             var item = new LibraryItem
             {
