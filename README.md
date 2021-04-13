@@ -1,6 +1,7 @@
 ﻿# Library Manager - Consid Code Test
 
-## Technical environment
+## Development environment
+- Windows 10, version 2004
 - Visual Studio Enterprise 2019, version 16.9.2. 
 - .NET 5, ASP.NET MVC
 - Entity Framework with an MSSQL Database
