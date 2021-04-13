@@ -70,11 +70,11 @@
             <td>
                 @if (item.IsBorrowable && String.IsNullOrWhiteSpace(item.Borrower))
                 {
-                    <a asp-action="Borrow" asp-route-id="@item.Id">Borrow item |</a>
+                    <a asp-action="Borrow" asp-route-id="@item.Id">Check out |</a>
                 }
                 else if (!String.IsNullOrWhiteSpace(item.Borrower))
                 {
-                    <a asp-action="Return" asp-route-id="@item.Id">Return item |</a>
+                    <a asp-action="Return" asp-route-id="@item.Id">Check in |</a>
                 }
 
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a>
