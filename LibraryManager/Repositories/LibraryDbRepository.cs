@@ -56,6 +56,18 @@ namespace LibraryManager.Repositories
             return await entities.FindAsync(id);
         }
 
+        public async Task<T> GetByIdAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = entities;
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await query.FirstOrDefaultAsync(predicate);
+        }
+
         /// <summary>
         /// Gets some items of the specified type from the database, based on a provided lambda expression
         /// </summary>

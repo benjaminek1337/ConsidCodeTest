@@ -7,12 +7,14 @@
 - Entity Framework with an MSSQL Database
 
 ## Run instructions
-To run the solution, import the solution to Visual Studio and open the solution. Then, let the packages download, and run the package manager console, run the "update-database" command. A local SQL db should be generated and seeded with some test-data. And you're good to go!
+To run the solution, import the solution to Visual Studio and open the solution. Then, let the packages download, 
+and run the package manager console, run the "update-database" command. A local SQL db should be generated and 
+seeded with some test-data. And you're good to go!
 
 ## Assignment
 Scenario 1 has been completed in this assignment, and all of the acceptance criteria has been met.
 Due to some time constraints due to my bachelors thesis, I only implemented scenario 1, as only one was 
-obligatory, and I focused on making it as good as I could. And the scenarios test roughly the same stuff
+obligatory, and I focused on making it as good as I could. And the scenarios tests roughly the same stuff
 anyway ;)
 
 ## Unit tests

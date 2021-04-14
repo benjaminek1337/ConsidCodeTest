@@ -16,5 +16,6 @@ namespace LibraryManager.Repositories
         Task<bool> AnyAsync(Expression<Func<T, bool>> query);
         Task<IEnumerable<T>> WhereAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
         Task<IEnumerable<T>> GetAllAsync(params Expression<Func<T, object>>[] includes);
+        Task<T> GetByIdAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
     }
 }

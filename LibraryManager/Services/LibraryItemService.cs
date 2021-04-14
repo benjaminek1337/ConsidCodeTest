@@ -92,7 +92,7 @@ namespace LibraryManager.Services
         /// <returns>A LibraryItem object</returns>
         public async Task<LibraryItem> GetItemByIdAsync(int id)
         {
-            return await libraryItems.GetByIdAsync(id);
+            return await libraryItems.GetByIdAsync(x => x.Id == id, x => x.Category);
         }
 
         /// <summary>
