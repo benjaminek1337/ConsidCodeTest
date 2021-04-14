@@ -18,7 +18,8 @@ obligatory, and I focused on making it as good as I could. And the scenarios tes
 anyway ;)
 
 ## Unit tests
-I unit tested some of the more troublesome methods to verify intended functionality, and that I am familiar
-with unit testing as a concept, and can implement it to a project. However, due to the afromentioned 
-schoolwork, I had to limit the ammount of tests.
+I unit tested some methods in part to verify their intended functionality (of course), and also as a demonstration 
+that I am familiar with unit testing as a concept, and that I can implement it to a project. However, due to the 
+afromentioned schoolwork, I had to limit the ammount of tests to keep the focus on implementing the best actual
+solution to satisy the assignments acceptance criteria.
 
