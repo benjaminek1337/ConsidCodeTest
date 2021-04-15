@@ -49,5 +49,53 @@ namespace LibraryManager.Tests
                 Assert.False(actual.Result);
             }
         }
+
+        [Fact]
+        public void GetCategoryByIdAsync_ShouldReturnCategory()
+        {
+            using (var mock = AutoMock.GetStrict())
+            {
+                mock.Mock<ILibraryDbRepository<Category>>()
+                    .Setup(x => x.GetByIdAsync(It.IsAny<int>()))
+                    .ReturnsAsync(new Category
+                    {
+                        CategoryName = "MyCategory",
+                        Id = 1337
+                    });
+
+                var expected = new Category
+                {
+                    CategoryName = "MyCategory",
+                    Id = 1337
+                };
+
+                var cls = mock.Create<CategoryService>();
+                var actual = cls.GetCategoryByIdAsync(It.IsAny<int>());
+
+                mock.Mock<ILibraryDbRepository<Category>>()
+                    .Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Once());
+
+                Assert.Equal(expected.Id, actual.Result.Id);
+            }
+        }
+        [Fact]
+        public void GetCategoryByIdAsync_ShouldReturnNull()
+        {
+            using (var mock = AutoMock.GetStrict())
+            {
+                mock.Mock<ILibraryDbRepository<Category>>()
+                    .Setup(x => x.GetByIdAsync(It.IsAny<int>()))
+                    .ReturnsAsync((Category)null);
+
+
+                var cls = mock.Create<CategoryService>();
+                var actual = cls.GetCategoryByIdAsync(It.IsAny<int>());
+
+                mock.Mock<ILibraryDbRepository<Category>>()
+                    .Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Once());
+
+                Assert.Null(actual.Result);
+            }
+        }
     }
 }

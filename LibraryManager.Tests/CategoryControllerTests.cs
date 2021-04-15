@@ -49,7 +49,7 @@ namespace LibraryManager.Tests
                 var ctrl = mock.Create<CategoriesController>();
                 var actual = ctrl.Details(It.IsAny<int>()).Result;
 
-                var viewResult = Assert.IsType<BadRequestResult>(actual);
+                Assert.IsType<BadRequestResult>(actual);
             }
         }
 
@@ -67,7 +67,59 @@ namespace LibraryManager.Tests
                 var ctrl = mock.Create<CategoriesController>();
                 var actual = ctrl.Details(id).Result;
 
-                var viewResult = Assert.IsType<NotFoundResult>(actual);
+                Assert.IsType<NotFoundResult>(actual);
+            }
+        }
+
+        [Fact]
+        public void DeleteConfirmed_ShouldReturnRedirectToActionIndex()
+        {
+            using (var mock = AutoMock.GetStrict())
+            {
+                mock.Mock<ICategoryService>()
+                    .Setup(x => x.GetCategoryByIdAsync(It.IsAny<int>()))
+                    .ReturnsAsync(new Category
+                    {
+                        CategoryName = "TestCategory",
+                        Id = 42
+                    });
+
+                mock.Mock<ICategoryService>()
+                    .Setup(x => x.DeleteCategoryAsync(It.IsAny<Category>()))
+                    .ReturnsAsync(true);
+
+                var ctrl = mock.Create<CategoriesController>();
+                var actual = ctrl.DeleteConfirmed(It.IsAny<int>());
+
+                var actionResult = Assert.IsType<RedirectToActionResult>(actual.Result);
+
+                Assert.Equal("Index", actionResult.ActionName);
+
+            }
+        }
+
+        [Fact]
+        public void DeleteConfirmed_ShouldReturnRedirectToActionDelete()
+        {
+            using (var mock = AutoMock.GetStrict())
+            {
+                mock.Mock<ICategoryService>()
+                    .Setup(x => x.GetCategoryByIdAsync(It.IsAny<int>()))
+                    .ReturnsAsync((Category)null);
+
+                mock.Mock<ICategoryService>()
+                    .Setup(x => x.DeleteCategoryAsync(It.IsAny<Category>()))
+                    .ReturnsAsync(false);
+
+                var ctrl = mock.Create<CategoriesController>();
+                var actual = ctrl.DeleteConfirmed(It.IsAny<int>());
+
+                var actionResult = Assert.IsType<RedirectToActionResult>(actual.Result);
+
+                Assert.Equal("Delete", actionResult.ActionName);
+                Assert.True(actionResult.RouteValues.Values.Contains(true));
+                Assert.True(actionResult.RouteValues.Values.Contains(It.IsAny<int>()));
+
             }
         }
     }

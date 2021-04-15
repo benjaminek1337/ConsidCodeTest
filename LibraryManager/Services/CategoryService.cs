@@ -77,7 +77,8 @@ namespace LibraryManager.Services
         /// <returns>A Category object</returns>
         public async Task<Category> GetCategoryByIdAsync(int id)
         {
-            return await categories.GetByIdAsync(id);
+            var category = await categories.GetByIdAsync(id);
+            return category;
         }
 
         /// <summary>
